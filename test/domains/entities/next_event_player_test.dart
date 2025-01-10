@@ -4,21 +4,41 @@ import 'package:flutter_test/flutter_test.dart';
 class NextEventPlayer {
   final String id;
   final String name;
+  late final String initials;
   final String? photo;
   final String? position;
   final bool isConfirmed;
   final DateTime? confirmationDate;
 
-  NextEventPlayer({
+  NextEventPlayer._({
     required this.id,
     required this.name,
+    required this.isConfirmed,
+    required this.initials,
     this.photo,
     this.position,
-    required this.isConfirmed,
     this.confirmationDate,
   });
 
-  String getInitials() {
+  factory NextEventPlayer({
+    required String id,
+    required String name,
+    required bool isConfirmed,
+    String? photo,
+    String? position,
+    DateTime? confirmationDate,
+  }) =>
+      NextEventPlayer._(
+        id: id,
+        name: name,
+        isConfirmed: isConfirmed,
+        initials: _getInitials(name),
+        position: position,
+        photo: photo,
+        confirmationDate: confirmationDate,
+      );
+
+  static String _getInitials(String name) {
     final names = name.split(' ');
     final firstChar = names.first[0];
     final lastChar = names.last[0];
@@ -27,10 +47,10 @@ class NextEventPlayer {
 }
 
 void main() {
-  NextEventPlayer makeSut(String name) => NextEventPlayer(id: '', name: name, isConfirmed: true);
+  String initialsOf(String name) => NextEventPlayer(id: '', name: name, isConfirmed: true).initials;
   test('should return the first letter of the first and last names', () {
-    expect(makeSut('Bruno Borges').getInitials(), 'BB');
-    expect(makeSut('Carolina Lobo Rodrigues').getInitials(), 'CR');
-    expect(makeSut('Amanda Pererira de Assis Vaz').getInitials(), 'AV');
+    expect(initialsOf('Bruno Borges'), 'BB');
+    expect(initialsOf('Carolina Lobo Rodrigues'), 'CR');
+    expect(initialsOf('Amanda Pererira de Assis Vaz'), 'AV');
   });
 }
